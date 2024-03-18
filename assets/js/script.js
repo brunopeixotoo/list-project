@@ -5,7 +5,7 @@ let inputElement = document.querySelector("#app input");
 let buttonElement = document.querySelector("#app button");
 
 //criando uma array, onde será armazenada nossas listas de tarefas.
-let tarefas = [];
+let tarefas = JSON.parse(localStorage.getItem("@listaTarefas")) || [];
 
 //FUNCTION DE ADICIONAR TAREFAS NO INDEX
 function renderTarefas() {
@@ -22,17 +22,17 @@ function renderTarefas() {
 
         //Criando botão para excluir e atribuindo elementos para ele --> <a href="a">
         let linkElement = document.createElement("a");
-        linkElement.setAttribute("href", "a")
+        linkElement.setAttribute("href", "#");
 
 
-        //Craindo text do button e adicionando na tag <a>
+        //Criando text do button e adicionando na tag <a>
         let textButton = document.createTextNode("Excluir");
         linkElement.appendChild(textButton);
 
         //posição de cada elemento criado
         let posicao = tarefas.indexOf(tarefa);
 
-        //Ao adiconar o botão Ecluir, é necessário colocar o atributo para caso ele aperte
+        //Ao adiconar o botão Excluir, é necessário colocar o atributo para caso ele aperte
         //Para isso, é preciso chamar a function se ele apertar o button, portanto:
         linkElement.setAttribute("onclick", `excluir(${posicao})`);
 
@@ -43,10 +43,12 @@ function renderTarefas() {
     });
 }
 
+renderTarefas();
+
 //FUNCTION DE ADICIONAR AS TAREFAS
 function adicionarTarefas() {
     if (inputElement.value === '') {
-        alert("Digite alguma tarefa")
+        alert("Digite alguma tarefa");
         return false;
     }else{
         //pegando o valor digitado no input
@@ -60,6 +62,7 @@ function adicionarTarefas() {
         
         //Após adicionar a nova tarefa, será necessário acionar a function que irá adiconar no index
         renderTarefas();
+        salvarDados();
     }
 }
 
@@ -67,5 +70,13 @@ function adicionarTarefas() {
 buttonElement.onclick = adicionarTarefas;
 
 function excluir(posicao) {
-    tarefas.slice(posicao, 1);
+    tarefas.splice(posicao, 1);
+    renderTarefas();
+    salvarDados();
+}
+
+//Salvadno dados no localStorege
+function salvarDados() {
+    localStorage.setItem("@listaTarefas", JSON.stringify(tarefas));
+
 }
